@@ -3,6 +3,7 @@ import Landing from './pages/Landing.jsx'
 import DiagnosticoInicio from './pages/DiagnosticoInicio.jsx'
 import DiagnosticoMentor from './pages/DiagnosticoMentor.jsx'
 import DiagnosticoResultado from './pages/DiagnosticoResultado.jsx'
+import ResultadoById from './pages/ResultadoById.jsx'
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Route path="/diagnostico" element={<DiagnosticoInicio />} />
       <Route path="/diagnostico/mentor" element={<DiagnosticoMentor />} />
       <Route path="/diagnostico/resultado" element={<DiagnosticoResultado />} />
+      <Route path="/resultado/:id" element={<ResultadoById />} />
     </Routes>
   )
 }
