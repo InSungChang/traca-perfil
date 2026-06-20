@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   ArrowLeft, Star, AlertTriangle, BarChart3, Target,
-  ChevronRight, RefreshCw, Compass, Building2, Users
+  ChevronRight, RefreshCw, Compass, Building2, Users, Sparkles
 } from 'lucide-react'
 
 function PlanCard({ period, actions, color }) {
@@ -51,6 +51,7 @@ export default function DiagnosticoResultado() {
     perfil_corporativo,
     estilo_lideranca,
     cruzamento_perfil_empresa,
+    analise_talentos,
     plano_30_dias = [],
     plano_60_dias = [],
     plano_90_dias = [],
@@ -191,6 +192,23 @@ export default function DiagnosticoResultado() {
             </div>
             {cruzamento_perfil_empresa.split('\n').map((p, i) => (
               <p key={i} className="text-sm text-ink-300 leading-relaxed mb-2 last:mb-0">
+                {p}
+              </p>
+            ))}
+          </div>
+        )}
+
+        {/* Talentos CliftonStrengths */}
+        {analise_talentos && (
+          <div className="glass rounded-3xl p-7">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/20">
+                <Sparkles size={16} className="text-amber-400" />
+              </div>
+              <h2 className="font-semibold text-ink-100">Talentos CliftonStrengths</h2>
+            </div>
+            {analise_talentos.split('\n').map((p, i) => (
+              <p key={i} className="text-sm text-ink-300 leading-relaxed mb-3 last:mb-0">
                 {p}
               </p>
             ))}

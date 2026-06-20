@@ -122,6 +122,62 @@ function MultiSelect({ question, value = [], onChange, error }) {
   )
 }
 
+function GroupedMultiSelect({ question, value = [], onChange, error }) {
+  const toggle = (opt) => {
+    const current = value || []
+    if (current.includes(opt)) {
+      onChange(question.id, current.filter((v) => v !== opt))
+    } else if (!question.max || current.length < question.max) {
+      onChange(question.id, [...current, opt])
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      <div>
+        <label className="text-ink-200 font-medium text-sm">{question.label}</label>
+        {question.max && (
+          <p className="text-xs text-ink-500 mt-1">
+            {(value || []).length}/{question.max} selecionados
+          </p>
+        )}
+      </div>
+      {question.groups.map((group) => (
+        <div key={group.label}>
+          <p className="text-xs font-semibold text-ink-500 uppercase tracking-wider mb-2.5">
+            {group.label}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {group.options.map((opt) => {
+              const selected = (value || []).includes(opt)
+              const maxReached = question.max && (value || []).length >= question.max && !selected
+              return (
+                <button
+                  key={opt}
+                  onClick={() => toggle(opt)}
+                  disabled={maxReached}
+                  className={`
+                    px-3.5 py-1.5 rounded-full border text-sm transition-all
+                    ${selected
+                      ? 'border-brand-400 bg-brand-400/15 text-brand-300 font-medium'
+                      : maxReached
+                      ? 'border-white/5 text-ink-600 cursor-not-allowed'
+                      : 'border-white/10 bg-ink-800/60 text-ink-400 hover:border-white/20 hover:text-ink-200'
+                    }
+                  `}
+                >
+                  {opt}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+      {error && <p className="text-red-400 text-xs">{error}</p>}
+    </div>
+  )
+}
+
 function QuestionRenderer({ question, answers, onChange, errors }) {
   const value = answers[question.id]
   const error = errors[question.id]
@@ -135,6 +191,8 @@ function QuestionRenderer({ question, answers, onChange, errors }) {
       return <SingleSelect question={question} value={value} onChange={onChange} error={error} />
     case 'multi-select':
       return <MultiSelect question={question} value={value} onChange={onChange} error={error} />
+    case 'grouped-multi-select':
+      return <GroupedMultiSelect question={question} value={value} onChange={onChange} error={error} />
     default:
       return null
   }
@@ -309,7 +367,14 @@ export default function DiagnosticoMentor() {
           {/* Step header */}
           <div className="mb-10">
             <p className="text-brand-400 text-xs font-semibold uppercase tracking-widest mb-2">
-              Etapa {currentStep + 1} — {step.id === 'identificacao' ? 'Identificação' : step.id === 'comportamento' ? 'Comportamento' : step.id === 'corporativo' ? 'Corporativo' : step.id === 'empresa' ? 'Empresa' : 'Foco'}
+              Etapa {currentStep + 1} — {{
+                identificacao: 'Identificação',
+                comportamento: 'Comportamento',
+                corporativo: 'Corporativo',
+                lideranca: 'Liderança e Talentos',
+                empresa: 'Empresa',
+                foco: 'Foco',
+              }[step.id] || step.id}
             </p>
             <h1 className="font-display text-3xl md:text-4xl font-semibold text-ink-50 mb-2">
               {step.title}

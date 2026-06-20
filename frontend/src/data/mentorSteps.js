@@ -1,3 +1,34 @@
+const cliftonGroups = [
+  {
+    label: 'Execução',
+    options: [
+      'Realizador', 'Organizador', 'Crença', 'Consistência',
+      'Deliberativo', 'Disciplina', 'Foco', 'Responsabilidade', 'Restaurador',
+    ],
+  },
+  {
+    label: 'Influência',
+    options: [
+      'Ativador', 'Comando', 'Comunicação', 'Competição',
+      'Maximizador', 'Autoconfiança', 'Significância', 'Conquistador',
+    ],
+  },
+  {
+    label: 'Relacionamento',
+    options: [
+      'Adaptabilidade', 'Conexão', 'Desenvolvedor', 'Empatia',
+      'Harmonia', 'Inclusão', 'Individualização', 'Positividade', 'Relator',
+    ],
+  },
+  {
+    label: 'Pensamento Estratégico',
+    options: [
+      'Analítico', 'Contexto', 'Futurista', 'Ideação',
+      'Coletor', 'Reflexão', 'Aprendizado', 'Estratégico',
+    ],
+  },
+]
+
 export const mentorSteps = [
   {
     id: 'identificacao',
@@ -92,6 +123,39 @@ export const mentorSteps = [
           { value: 'conservador', label: 'Conservador', desc: 'Prefere o caminho conhecido e seguro' },
         ],
         required: true,
+      },
+    ],
+  },
+  {
+    id: 'lideranca',
+    title: 'Liderança e Talentos',
+    subtitle: 'Tipo de liderança observado e talentos do CliftonStrengths (se disponível).',
+    questions: [
+      {
+        id: 'tipo_lideranca',
+        type: 'single-select',
+        label: 'Qual tipo de liderança você observa nele predominantemente?',
+        options: [
+          { value: 'centralizador', label: 'Centralizador', desc: 'Concentra decisões, dificuldade em delegar' },
+          { value: 'desenvolvedor', label: 'Desenvolvedor', desc: 'Investe nas pessoas, forma líderes internos' },
+          { value: 'tecnico', label: 'Técnico', desc: 'Excelência no ofício, visão de negócio limitada' },
+          { value: 'comunicador', label: 'Comunicador', desc: 'Articula bem, influencia, pode faltar execução' },
+          { value: 'estrategico', label: 'Estratégico', desc: 'Pensa no futuro, pode ser ausente no operacional' },
+          { value: 'executor', label: 'Executor', desc: 'Faz acontecer, entrega, pode ser rígido' },
+          { value: 'controlador', label: 'Controlador', desc: 'Acompanha de perto, tende ao microgerenciamento' },
+          { value: 'inspirador', label: 'Inspirador', desc: 'Motiva equipes, pode faltar consistência' },
+          { value: 'reativo', label: 'Reativo', desc: 'Age por pressão, sem proatividade clara' },
+          { value: 'ausente', label: 'Ausente', desc: 'Pouca presença de liderança percebida pela equipe' },
+        ],
+        required: true,
+      },
+      {
+        id: 'clifton_top5',
+        type: 'grouped-multi-select',
+        label: 'Top 5 talentos do CliftonStrengths (opcional — selecione se já fez o assessment Gallup):',
+        groups: cliftonGroups,
+        max: 5,
+        required: false,
       },
     ],
   },
