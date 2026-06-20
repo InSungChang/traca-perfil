@@ -62,7 +62,25 @@ export default function DiagnosticoResultado() {
   return (
     <div className="min-h-screen bg-ink-950">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-ink-950/95 backdrop-blur border-b border-white/6">
+      {/* Cabeçalho de impressão — visível só no PDF */}
+      <div className="print-only hidden px-8 pt-8 pb-4 border-b border-gray-200 mb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-brand-500 flex items-center justify-center">
+              <Compass size={14} className="text-white" />
+            </div>
+            <span className="font-display font-bold text-xl text-ink-900">
+              Traça<span className="text-brand-400">Perfil</span>
+            </span>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-ink-500 uppercase tracking-wide">Diagnóstico de Mentor</p>
+            <p className="text-xs text-ink-400">{new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+          </div>
+        </div>
+      </div>
+
+      <header className="print-hidden sticky top-0 z-40 bg-ink-950/95 backdrop-blur border-b border-white/6">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <button
             onClick={() => navigate('/diagnostico')}
@@ -81,9 +99,10 @@ export default function DiagnosticoResultado() {
           </div>
           <button
             onClick={() => window.print()}
-            className="text-ink-400 hover:text-ink-200 transition-colors text-sm"
+            className="flex items-center gap-1.5 text-ink-400 hover:text-ink-200 transition-colors text-sm border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg"
           >
-            Imprimir
+            <Sparkles size={13} />
+            Baixar PDF
           </button>
         </div>
       </header>
@@ -92,7 +111,7 @@ export default function DiagnosticoResultado() {
 
         {/* Hero do resultado */}
         <div
-          className="rounded-3xl p-8 md:p-12 relative overflow-hidden"
+          className="result-hero rounded-3xl p-8 md:p-12 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, rgba(228,157,56,0.12) 0%, rgba(26,31,46,0.95) 60%)',
             border: '1px solid rgba(228,157,56,0.15)',
@@ -216,7 +235,7 @@ export default function DiagnosticoResultado() {
         )}
 
         {/* Plano de ação 30/60/90 */}
-        <div>
+        <div className="print-page-break">
           <div className="flex items-center gap-2.5 mb-5">
             <div className="p-2 rounded-xl bg-brand-500/15 border border-brand-500/20">
               <Users size={16} className="text-brand-400" />
@@ -231,7 +250,7 @@ export default function DiagnosticoResultado() {
         </div>
 
         {/* CTA */}
-        <div className="glass rounded-3xl p-8 text-center">
+        <div className="print-hidden glass rounded-3xl p-8 text-center">
           <p className="text-ink-400 text-sm mb-4">
             Quer fazer o diagnóstico de outro mentorado?
           </p>

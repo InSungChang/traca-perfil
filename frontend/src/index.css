@@ -60,3 +60,75 @@ body {
 .pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
 }
+
+/* ─── Print / PDF ──────────────────────────────────────────────────────────── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    animation: none !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  /* Dark backgrounds → white */
+  .bg-ink-950, .bg-ink-900, .bg-ink-800 {
+    background-color: #ffffff !important;
+  }
+
+  /* Text colors → dark */
+  .text-ink-50, .text-ink-100, .text-ink-200 { color: #111111 !important; }
+  .text-ink-300, .text-ink-400             { color: #444444 !important; }
+  .text-ink-500, .text-ink-600             { color: #666666 !important; }
+
+  /* Brand colors — keep amber */
+  .text-brand-400 { color: #c8781a !important; }
+  .bg-brand-500   { background-color: #c8781a !important; }
+
+  /* Cards */
+  .glass, .glass-light {
+    background: #f5f5f5 !important;
+    border-color: #e0e0e0 !important;
+  }
+
+  /* Hero section override */
+  .result-hero {
+    background: #fff8ee !important;
+    border: 1px solid #e8c87a !important;
+  }
+
+  /* Icon badge backgrounds */
+  [class*="bg-brand-500/"], [class*="bg-amber-500/"]  { background-color: rgba(200,120,26,0.12) !important; }
+  [class*="bg-indigo-500/"]  { background-color: rgba(99,102,241,0.12) !important; }
+  [class*="bg-emerald-500/"] { background-color: rgba(16,185,129,0.12) !important; }
+  [class*="bg-orange-500/"]  { background-color: rgba(249,115,22,0.12) !important; }
+  [class*="bg-purple-500/"]  { background-color: rgba(168,85,247,0.12) !important; }
+
+  /* Plan cards */
+  [class*="bg-brand-500/5"]   { background-color: #fff8ee !important; }
+  [class*="bg-indigo-500/5"]  { background-color: #f0f0ff !important; }
+  [class*="bg-emerald-500/5"] { background-color: #f0fff8 !important; }
+
+  /* Borders */
+  [class*="border-white/"] { border-color: #e0e0e0 !important; }
+
+  /* Avoid breaking cards across pages */
+  .glass, .glass-light, [class*="rounded-3xl"], [class*="rounded-2xl"] {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Page break before the 30/60/90 plan */
+  .print-page-break { page-break-before: always; break-before: always; }
+
+  /* Hide interactive/nav elements */
+  .print-hidden { display: none !important; }
+
+  /* Show print-only elements */
+  .print-only { display: block !important; }
+}
