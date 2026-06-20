@@ -8,7 +8,8 @@ export default function DiagnosticoResultado() {
   const location = useLocation()
   const [copied, setCopied] = useState(false)
 
-  const { resultado, nome, id } = location.state || {}
+  const { resultado, nome } = location.state || {}
+  const id = resultado?.id
 
   useEffect(() => {
     if (!resultado) navigate('/diagnostico', { replace: true })
