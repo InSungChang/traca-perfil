@@ -29,6 +29,17 @@ const cliftonGroups = [
   },
 ]
 
+export const estiloAtuacaoOptions = [
+  { value: 'executor', label: 'Executor', desc: 'Faz acontecer, entrega resultados' },
+  { value: 'gestor', label: 'Gestor', desc: 'Organiza, coordena, lidera equipes' },
+  { value: 'comercial', label: 'Comercial', desc: 'Vende, negocia, abre portas' },
+  { value: 'tecnico', label: 'Técnico', desc: 'Especialista profundo no seu domínio' },
+  { value: 'estrategico', label: 'Estratégico', desc: 'Pensa no futuro, planeja, posiciona' },
+  { value: 'criativo', label: 'Criativo', desc: 'Inova, gera ideias, resolve diferente' },
+  { value: 'relacional', label: 'Relacional', desc: 'Conecta pessoas, cria cultura, engaja' },
+  { value: 'analitico', label: 'Analítico', desc: 'Dados, processos, qualidade, precisão' },
+]
+
 export const mentorSteps = [
   {
     id: 'identificacao',
@@ -100,16 +111,7 @@ export const mentorSteps = [
         id: 'estilo_atuacao',
         type: 'single-select',
         label: 'Onde ele se encaixa melhor dentro de uma empresa?',
-        options: [
-          { value: 'executor', label: 'Executor', desc: 'Faz acontecer, entrega resultados' },
-          { value: 'gestor', label: 'Gestor', desc: 'Organiza, coordena, lidera equipes' },
-          { value: 'comercial', label: 'Comercial', desc: 'Vende, negocia, abre portas' },
-          { value: 'tecnico', label: 'Técnico', desc: 'Especialista profundo no seu domínio' },
-          { value: 'estrategico', label: 'Estratégico', desc: 'Pensa no futuro, planeja, posiciona' },
-          { value: 'criativo', label: 'Criativo', desc: 'Inova, gera ideias, resolve diferente' },
-          { value: 'relacional', label: 'Relacional', desc: 'Conecta pessoas, cria cultura, engaja' },
-          { value: 'analitico', label: 'Analítico', desc: 'Dados, processos, qualidade, precisão' },
-        ],
+        options: estiloAtuacaoOptions,
         required: true,
       },
       {

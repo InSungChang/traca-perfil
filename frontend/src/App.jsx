@@ -4,6 +4,7 @@ import DiagnosticoInicio from './pages/DiagnosticoInicio.jsx'
 import DiagnosticoMentor from './pages/DiagnosticoMentor.jsx'
 import DiagnosticoResultado from './pages/DiagnosticoResultado.jsx'
 import ResultadoById from './pages/ResultadoById.jsx'
+import QuizPerfil from './pages/QuizPerfil.jsx'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/diagnostico/mentor" element={<DiagnosticoMentor />} />
       <Route path="/diagnostico/resultado" element={<DiagnosticoResultado />} />
       <Route path="/resultado/:id" element={<ResultadoById />} />
+      <Route path="/quiz/:id" element={<QuizPerfil />} />
     </Routes>
   )
 }

@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import diagnosticoRouter from './routes/diagnostico.js'
+import quizRouter from './routes/quiz.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -13,6 +14,7 @@ app.use(express.json())
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }))
 app.use('/api/diagnostico', diagnosticoRouter)
+app.use('/api/quiz', quizRouter)
 
 app.listen(PORT, () => {
   console.log(`Backend rodando em http://localhost:${PORT}`)

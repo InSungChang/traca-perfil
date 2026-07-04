@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Compass, CheckCircle2, Loader2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Compass, CheckCircle2, Loader2, Link, Check, RefreshCw } from 'lucide-react'
 import { mentorSteps } from '../data/mentorSteps.js'
 
 // ─── Question renderers ───────────────────────────────────────────────────────
@@ -258,6 +258,13 @@ export default function DiagnosticoMentor() {
   const [loading, setLoading] = useState(false)
   const [apiError, setApiError] = useState(null)
 
+  const [quizId, setQuizId] = useState(null)
+  const [quizLink, setQuizLink] = useState(null)
+  const [quizStatus, setQuizStatus] = useState(null) // null | 'pendente' | 'respondido'
+  const [quizGenerating, setQuizGenerating] = useState(false)
+  const [quizChecking, setQuizChecking] = useState(false)
+  const [quizCopied, setQuizCopied] = useState(false)
+
   const step = mentorSteps[currentStep]
   const totalSteps = mentorSteps.length
   const isLast = currentStep === totalSteps - 1
@@ -302,6 +309,55 @@ export default function DiagnosticoMentor() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
+
+  const gerarQuizLink = async () => {
+    setQuizGenerating(true)
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/quiz`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome_mentorado: answers.nome }),
+      })
+      const data = await response.json()
+      setQuizId(data.id)
+      setQuizLink(`${window.location.origin}/quiz/${data.id}`)
+      setQuizStatus('pendente')
+    } catch {
+      // Falha ao gerar link — mentor pode tentar novamente ou seguir manualmente
+    } finally {
+      setQuizGenerating(false)
+    }
+  }
+
+  const handleCopyQuizLink = () => {
+    navigator.clipboard.writeText(quizLink)
+    setQuizCopied(true)
+    setTimeout(() => setQuizCopied(false), 2500)
+  }
+
+  const verificarQuiz = async () => {
+    if (!quizId) return
+    setQuizChecking(true)
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/quiz/${quizId}`)
+      const data = await response.json()
+      setQuizStatus(data.status)
+      if (data.status === 'respondido' && data.estilo_confirmado) {
+        setAnswers((prev) => ({ ...prev, estilo_atuacao: prev.estilo_atuacao || data.estilo_confirmado }))
+      }
+    } catch {
+      // Falha ao verificar — mentor pode tentar de novo
+    } finally {
+      setQuizChecking(false)
+    }
+  }
+
+  useEffect(() => {
+    if (step.id === 'corporativo' && quizId && quizStatus === 'pendente') {
+      verificarQuiz()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep])
 
   const submitDiagnostico = async () => {
     setLoading(true)
@@ -381,6 +437,68 @@ export default function DiagnosticoMentor() {
             </h1>
             <p className="text-ink-400">{step.subtitle}</p>
           </div>
+
+          {/* Quiz de autoidentificação — oferecido no primeiro passo */}
+          {step.id === 'identificacao' && (
+            <div className="mb-8 p-5 rounded-2xl border border-white/8 bg-ink-800/40">
+              {!quizLink ? (
+                <>
+                  <p className="text-ink-200 font-medium text-sm mb-1">Não sabe o estilo de atuação do mentorado?</p>
+                  <p className="text-ink-400 text-xs mb-4">
+                    Envie um quiz rápido para ele responder — o resultado preenche automaticamente a pergunta de estilo corporativo mais adiante.
+                  </p>
+                  <button
+                    onClick={gerarQuizLink}
+                    disabled={quizGenerating}
+                    className="flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl border border-brand-400/40 text-brand-400 hover:bg-brand-400/10 transition-all disabled:opacity-60"
+                  >
+                    {quizGenerating ? <Loader2 size={14} className="animate-spin" /> : <Link size={14} />}
+                    {quizGenerating ? 'Gerando link...' : 'Enviar quiz de perfil para o mentorado'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-ink-200 font-medium text-sm mb-2">Link do quiz gerado</p>
+                  <p className="text-ink-400 text-xs font-mono break-all mb-3">{quizLink}</p>
+                  <button
+                    onClick={handleCopyQuizLink}
+                    className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                      quizCopied
+                        ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10'
+                        : 'border-white/10 text-ink-400 hover:text-ink-200 hover:border-white/20'
+                    }`}
+                  >
+                    {quizCopied ? <Check size={12} /> : <Link size={12} />}
+                    {quizCopied ? 'Copiado!' : 'Copiar link'}
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Status do quiz — visível na etapa de estilo corporativo */}
+          {step.id === 'corporativo' && quizId && (
+            <div className="mb-8 p-4 rounded-2xl border border-white/8 bg-ink-800/40 flex items-center justify-between gap-3">
+              {quizStatus === 'respondido' ? (
+                <p className="text-emerald-400 text-xs flex items-center gap-1.5">
+                  <CheckCircle2 size={13} />
+                  Preenchido pelo mentorado — você ainda pode ajustar manualmente.
+                </p>
+              ) : (
+                <>
+                  <p className="text-ink-400 text-xs">Aguardando resposta do mentorado ao quiz...</p>
+                  <button
+                    onClick={verificarQuiz}
+                    disabled={quizChecking}
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-white/10 text-ink-400 hover:text-ink-200 hover:border-white/20 transition-all shrink-0 disabled:opacity-60"
+                  >
+                    {quizChecking ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                    Verificar novamente
+                  </button>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Questions */}
           <div className="flex flex-col gap-8">
